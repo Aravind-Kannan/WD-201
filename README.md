@@ -332,3 +332,131 @@
         countdown(number - 1)
     countdown(10)
     ```
+
+  ### Object Oriented Programming with python
+
+  - **Introduction to Object Oriented Programming**:
+
+    - In Python, everything is an object. You can think of an object as something that holds a collection of data and methods that act on those data. The objects are created from classes.
+    - Classes as blueprints for creating objects AND objects as something that was created with those blueprints
+      > `Unorganized` code (also known as `spaghetti` code)
+      > Note that `class` names are always in `UpperCamelCase`
+
+    ```python
+    class Person: # This syntax creates a new class called Person
+      name = "Person" # This is a class attribute.
+
+      # Note that the data and methods of a class are defined in the class block
+
+      john = Person() # This is the syntax used to convert a class into an objects
+      # Converting a class into an object is called instantiation, We create an instance of the class as an object
+      print(john.name) # Prints out Person
+      # We can access by using the dot notation : <obj_variable>.<class_variable>
+    ```
+
+    - `Constructors` are used to initialize an object. Constructors can receive arguments and change attributes of the object during initialization. The constructor in Python is called `__init__`
+
+      ```python
+      class Person: # Create a new Class Person
+        name = "Person" # Default Attributes
+        salutation = "Hello "
+
+        def __init__(self , name):# Note that name is both a parameter and a class attribute
+            self.name = name # self.name refers to the class attribute and the other one refers to the parameter
+
+        def greet(self): # Create another class method that returns a greeting
+            return self.salutation + self.name # self is the object on which the method is called
+
+      john = Person("John Doe")
+      print(john.greet()) # Prints Hello John Doe
+      jane = Person("Jane Doe")
+      print(jane.greet()) # Prints Hello Jane Doe
+      ```
+
+      > Notice that the first argument in the constructor was `self`, this is not an argument that we pass onto the constructor, it refers to the object that has called the method, so if you wanted to access another attribute of the object you can use the `self.<variable_name>`
+
+    - In Python, constructor methods are called **magic** methods or **dunder** methods. They are prefixed and suffixed with two underscores.
+
+  - **Inheritance**:
+
+    - Inheritance is a way to create new classes from existing classes.
+    - This is done by using the class keyword followed by the name of the new class and the name of the existing class. The new class inherits all the methods and attributes of the existing class. The new class can also have its own methods and attributes. The new class is called a **subclass** while the existing class is called a **superclass**. The subclass can also override attributes and methods from a superclass (create its own versions of attributes and methods).
+    - Classes can also **override** methods in their parents, this is used to redefine the behavior of a method.
+    - Python also supports **multiple inheritance**. This is used when we want to inherit from multiple classes.
+    - Each Python object has a method resolution order (MRO) which is a list of classes that are used to resolve the method. The MRO is used to determine which class to call when a method is called. Let's say that each of the inherited classes has the same function, to identify which method is called we use the MRO.
+
+    ```python
+    print(ab.mro()) # [<class '__main__.AB'>, <class '__main__.A'>, <class '__main__.B'>, <class 'object'>]
+    # The MRO is [AB, A, B, object] so the AB class is checked first then the A class and then the B class.
+    ```
+
+    -**Mixin**: When developing applications you might come across common functionality that is shared between a number of classes, in Python each feature can be built into different classes and then combined together to create a new class with the functionality required. Each of the feature classes is called a Mixin. Mixins are extremely useful in web development to add new features to existing classes.
+
+    ```python
+    class RunnableMixin:
+        def run(self):
+            print("Can Run")
+
+    class WalkableMixin:
+        def walk(self):
+            print("Can Walk")
+
+    class TalkingMixin:
+        def talk(self):
+            print("Can Talk")
+
+    class Animal(RunnableMixin, WalkableMixin):
+        pass
+
+    class Human(RunnableMixin, WalkableMixin, TalkingMixin):
+        pass
+    ```
+
+  - **Encapsulation**: Encapsulation is the process of wrapping the `data` and `code` together to prevent data from being accessed by other parts of the program. This is done so that we don't manually change the attributes of the object, which could cause unexpected results.
+
+    - **Protected** members can only be accessed by the class itself or its subclasses. Protected members are prefixed with an underscore (`_`). Protected members are _only_ a **convention**, and they are not enforced by Python. You can directly change the `_variable` value.
+    - Python also has a concept of **private** members, which are members that can only be accessed by the class itself, even base classes cannot access these members. Private members are prefixed with two underscores (`__`). Private members are also by convention only since these members can be accessed in the following format: `object._<class_name><private_member_name>` or in our case `john._Person__name`
+
+      ```python
+      class Person:
+        __name = "Person" # This is a private member (Prefixed by double underscores)
+
+        def __init__(self, name):
+            self.__name = name
+
+        def greet(self):
+            print("Hello, my name is " + self.__name)
+
+      john = Person("John")
+      john.__name = "Jane" # Creates a new attribute but does not edit the existing __name attribute
+      john.greet() # Hello, my name is John
+      ```
+
+    > **[Name mangling](https://docs.python.org/3/tutorial/classes.html#private-variables)**: Convention School of thought
+
+    - **Abstract Classes**: An Abstract class is a class that contains blueprints for other classes to inherit from. An Abstract class does not contain any implementation but it defines a common interface for its subclasses.
+
+  - **Operator Overloading**: Python Operators like `+`, `-` can be overloaded to perform different operations based on what object is being operated on. The [list](https://docs.python.org/3/reference/datamodel.html#special-method-names) of operators that we can override are defined using the dunder methods.
+
+    ```python
+    class Point:
+      def __init__(self, x, y):
+          self.x = x
+          self.y = y
+
+      def __add__(self, other): # Overloading the `+` operator
+          return Point(self.x + other.x, self.y + other.y)
+      # self is the object on the lhs and other is the object on the rhs
+
+      def __sub__(self, other): # Overloading the `-` operator
+          return Point(self.x - other.x, self.y - other.y)
+
+      # This is called when the object is printed or converted to a string
+      def __str__(self): # Overloading the `str` operator
+          return f"({self.x}, {self.y})"
+
+    point_a = Point(1, 2)
+    point_b = Point(3, 4)
+    print(point_a + point_b) # Output: (4, 6)
+    print(point_a - point_b) # Output: (-2, -2)
+    ```
