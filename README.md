@@ -152,3 +152,183 @@
 
   - Chapter 5 - More on [Remote control](http://jlord.us/git-it/challenges/remote_control.html)
   - Chapter 6 - More on [Forks and clones](http://jlord.us/git-it/challenges/forks_and_clones.html)
+
+## Level 2: Introduction to Python
+
+- Setting up developer environment: `VSCode` and `Python`
+- Running python code:
+  - Running python shell (Python Interpreter): Based out of Read–eval–print loop
+  - Executing python files
+- Autoformatting used: Black, [instructed](https://marcobelo.medium.com/setting-up-python-black-on-visual-studio-code-5318eba4cd00) to install
+
+  ### Getting started with Python
+
+  - **What is Python?**: Python is an _interpreted, object-oriented, high-level_ programming language. Python is easy to get started with and is powerful enough to run large web applications.
+  - **What is a Program?**: A program is a collection of statements that performs a specific task. or in simple words, it is an abstraction that takes some input and processes it to produce some output.
+  - Variable names should:
+    - be in **snake_case**
+    - not start with a **number**
+    - not be a **reserved keyword**
+  - **Variables and Data types**:
+    ```python
+    number = 5 # int
+    ratio = 1.5 # float
+    salutation = "Hello" # string
+    is_even = True # boolean
+    ```
+  - **Converting Data types**:
+    - The process of converting one data type to another is called type conversion.
+    - `type(<variable>)`: Returns the type of the `variable`
+    - **Implicit type conversions** are done automatically by Python
+    - **Explicit type conversions** are done manually in code
+      - `int()`, `float()`, `str()`, `bool()` converts a given data type into the respective function's datatype
+      - **Note**:
+        - that converting a float to an int will truncate the decimal part of the number (Flooring the number)
+        - trying to convert a non-numeric string to an int will result in an exception
+  - **Strings in python**:
+    ```python
+    some_string = "hello world, This is A test"
+    print(some_string.capitalize())  # Capitalizes the first character
+    print(some_string.count("a")) # Counts the number of times the character "a" occurs in the string
+    print(some_string.endswith("test")) # Returns True if the string ends with the substring "test"
+    print(some_string.find("gem")) # Returns the index of the first occurrence of the substring "gem" and -1 if it does not exist.
+    print(some_string.index("test")) # Returns the index of the first occurrence of the substring "test" and raises an exception if it does not exist.
+    print(some_string.upper()) # Returns a copy of the string in uppercase
+    print(some_string.title()) # Returns a copy of the string in title case
+    print(some_string.swapcase()) # Returns a copy of the string in swapcase
+    ```
+  - **Note**: A neat little hack in Python to see all the functions available is to type `dir()` and see what functions are available.
+  - **F strings**:
+    - `F strings` are a relatively new addition to Python (since `3.6`), they are a way to format strings
+      ```python
+      some_variable = "john"
+      print(f"hello {some_variable}") # prints hello john
+      ```
+  - **Blocks in python**: Python programs get structured through indentation, i.e. code blocks are defined by their indentation. it's a language requirement, not a matter of style.
+  - **Functions in python [DRY principle - Don't repeat yourself]**:
+
+    - Functions in Python are a group of statements (code block) that may or may not take inputs and may or may not return values.
+    - At times, functions don't return any value, then they assume return type of `None`
+    - To create functions without any statements in them use the `pass` statement
+
+    ```python
+    def greet(name, greeting = "Good Morning"): # this defines a function called greet with two parameters called name and greeting
+      return greeting + " " + name
+
+    print(greet("John")) # prints "Good Morning John"
+    print(greet("Jane", "Good Afternoon")) # prints "Good Afternoon Jane"
+    print(greet(name="John")) # we can also pass parameters to the function by name, that way we can change the order of the parameters
+    ```
+
+  - **Conditionals in python**:
+    - A very simple if statement, has only one condition, if the condition evaluates as `True` or `1`, then the body of the if statement is executed, if not the body of the else is executed.
+    ```python
+    (2 > 1) and print("2 is greater than 1") # prints 2 is greater than 1
+    (1 > 2) and print("1 is greater than 2") # prints nothing
+    ```
+  - **Lists**:
+
+    - A list is a collection of items. These items can be of any data type. In Python, lists are very flexible as they allow to add/remove items if needed. Lists are mutable as in you can change the value of an item in a list.
+    - Lists are indexed starting from `0`
+    - Lists can be sliced (create a new sublist from the list) like this `list_variable[start:end]`, note that the `start` is included and the `end` is excluded
+    - Lists can also be `negatively` indexed
+    - 💡: To **interpret** _negative indices_ as positive, just convert to positive by _adding given -ve index to length of list_
+
+    ```python
+    list_with_numbers = [1, 2, 3, 4, 5]
+    print(list_with_numbers[0]) # prints 1
+    print(list_with_numbers[-1]) # prints 5
+    print(list_with_numbers[-3:]) # prints [3, 4, 5] (the last three items with the start included)
+
+    list_with_numbers.append(6) # adds 6 to the end of the list
+    list_with_numbers.insert(2, 7) # inserts 7 at index 2
+    list_with_numbers.remove(3) # removes the first 3 from the list ** Based on the value not the index
+    list_with_numbers.pop() # removes the last item from the list
+    list_with_numbers.pop(0) # removes the first item from the list
+    list_with_numbers.reverse() # reverses the order of the list, note that this function does not return anything
+    list_with_numbers.sort() # sorts the list , note that this function does not return anything
+    list_with_numbers.sort(reverse=True) # sorts the list in reverse order
+
+    some_string = "This is a test"
+    list_of_words = some_string.split(" ") # The argument to the split function is used to split the words by.
+    print(list_of_words) # prints ['This', 'is', 'a', 'test']
+
+    list_of_words = ["This", "is", "a", "test"]
+    joined_string = "-".join(list_of_words) # The argument to the join function is the list of words to be joined, "-" is the string that will be used to concatenate the list items.
+    print(joined_string) # prints "This-is-a-test"
+    ```
+
+  - **Fun with lists**:
+
+    - Given a list, we can define a function and have Python call the function with every item in the list. This is performed using the `map function`. Syntax: `map(<function>, <list>)`, returns a map, we must explicitly convert to list to use
+    - Python comes with an immutable version of lists called `tuple`. Tuples do not support changes once initialized.
+
+  - **Dictionaries**:
+
+    - A dictionary in Python is simply a collection of key-value pairs.
+
+    ```python
+    contact_details = {
+        "John": "1234567890",
+        "Jane": "0987654321",
+    }
+    print(contact_details.keys()) # prints ["John", "Jane"]
+    print(contact_details.values()) # prints ["1234567890", "0987654321"]
+    print(contact_details.get("Jane")) # prints 0987654321
+    print(contact_details.get("Mary", "Not found")) # prints Not found
+    ```
+
+  - **Iterations in Python**: Iterative statements are used to execute a block of code multiple times, usually, until a given condition has been reached.
+
+    - `while` loop: In case you do end up in an infinite loop use `control + c` key combination to stop the program execution. We can also `break` to come out of a loop at any point. Similarly, we can also cause the loop to skip over some code by using the `continue` statement.
+
+      ```python
+      i= 10
+      while True:
+          i = i - 1  # decrement i by 1
+          if i == 5:
+              continue
+          if i == 0:
+              break
+          print(i)
+      ```
+
+    - `for` loop: The `for` loop is used to iterate over a sequence (lists, dictionaries, string, or anything iterable). `range(start, stop, step)` can be used to build a list of numbers to be iterated over.
+
+    > **Advanced Reading** : Python has a concept of iterators and generators. `Iterators` are objects that are used to iterate over a sequence. `Generators` are functions that return iterators. They are a bit hard to understand at first but once you get them you will understand them very well. You can find a full list of iterators and generators in the [Python documentation](https://docs.python.org/3/glossary.html#term-iterator).
+
+    - **Exception Handling**:
+
+      - Errors are called Exceptions in the Python world
+      - The `try` block is the block that we want to execute, the `except` block is the code that we want to execute if an error occurs.
+      - Note that the _statements after the error_ in the try block are _skipped_. Once an error occurs the rest of the try block is skipped and the except block is executed immediately.
+      - We can also add generic exception handling by using the `except` keyword without specifying the exception type. This will handle all the exceptions that are not handled by the other `except` blocks. We can also add a `finally` block to the `except` block to execute code after the `try` block has been executed. The `finally` block is executed whether an _error occurs or not_
+      - Exceptions in Python can also be raised by the programmer, this is done using the `raise` statement. This is useful when we want to force the execution to move to the except block.
+
+      ```python
+      try:
+          numerator = 10
+          denominator = 0 # Change this to see different execution flows
+          if denominator > 100:
+              raise ValueError("Denominator cannot be greater than 100")
+          print("Answer is" , numerator/denominator)
+      except ZeroDivisionError:
+          print("You cannot divide by zero")
+      except ValueError:
+          print("Value Error! Denominator Must be < 100") # Catches the Value Error
+      except:
+          print("Something Happened")
+      finally:
+          print("All operations have been completed")
+      ```
+
+    - **Recursive Functions**: A function that calls itself and terminated by a `base case`.
+
+    ```python
+    def countdown(number):
+        if number < 0:
+            return
+        print(number)
+        countdown(number - 1)
+    countdown(10)
+    ```
