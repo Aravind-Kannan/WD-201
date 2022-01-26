@@ -492,3 +492,69 @@ point_b = Point(3, 4)
 print(point_a + point_b) # Output: (4, 6)
 print(point_a - point_b) # Output: (-2, -2)
 ```
+
+# Level 3: Introduction to Web Development
+
+## Crash course on web development
+
+### Dynamic vs Static Web Pages
+
+When browsing the web you might see pages that don't change no matter who views them or where you view them from, these are called `static web pages`. Most of the pages you visit will be `dynamic`, these are pages that are generated just for you, they are newly generated just for you by servers (specifically, _web servers_).
+
+### Frontend vs Backend
+
+The `frontend` is the part of the web that is seen by the user, they are also called `client-side`. `Backend` is the part of the web that is not seen by the user, they are also called `server-side`. The backend contains the logic that makes your application work. Splitting the app into different parts makes it easier to manage and update. It also allows developers to create different versions of the application like a mobile version, a desktop version, a version for a tablet, etc without much hassle.
+
+### API's and JSON
+
+- In modern applications, the Front End and Back End are developed and maintained separately, They often use APIs to communicate with each other, we talked about backend and frontend, the frontend usually communicates with the backend using `HTTP requests` and `responses`.
+- **JSON** Stands for **JavaScript Object Notation**, it was based on a subset of the Javascript Programming language. Even though JSON is based on Javascript, it is a language-independent data format, as in it can be used in any programming language.
+- The reason why we have standard interchange formats like JSON is that HTTP only allows transferring plaintext data, Plaintext data does not have any kind of structuring, it is just a bunch of characters. Formats like JSON or XML bring formatting and structure to the data, which makes it easier for us developers and machines to understand it better.
+- API's are not just used for data interchange between the frontend and the backend, it can be used for machine communication (backend to backend) as well.
+
+> Note: Web 1.0 - read-only version of the internet:
+>
+> - Web 1.0 is the term used for the earliest version of the Internet as it emerged from its origins with **Defense Advanced Research Projects Agency (DARPA)** and became, for the first time, a global network representing the future of digital communications.
+> - mostly composed of web pages joined by hyperlinks, without the additional visuals, controls and forms
+> - passive, and much of the user input took place offline
+> - 🤫 Web users now may find it shocking that at the time of Web 1.0, running advertisements was banned.
+> - In fact, it's interesting that even years later when full functionality is delivered over the web, many corporate functions and user experiences are instead provided through mobile applications on operating systems iOS and Android, rather than through an Internet browser. The browser can deliver nearly any sort of function that an app can provide; in fact, on modern smartphones, it’s a user preference to either access a social media platform or other tool from **an app, or through the web**.
+
+### Forms in HTML
+
+- Using Forms and Inputs the user can interact with the webpage and send data back to the server. This data can then be used to create dynamic web pages, In dynamic web pages, the pages are generated on the fly by a web server.
+- The form tag has two important attributes that are used to send back data to the server, the `action` attribute specifies the URL that the data will be sent to, and the `method` attribute specifies the method that will be used to send the data.
+- There are two main methods that we use to send data to the server, `GET` and `POST`.
+  - GET is used to send data encoded into the URL, and POST is used to send data to the server in the body of the request.
+  - Ultimately both of them achieve the same goal, POST over HTTPS is the most secure method. GET is used when the data is not sensitive.
+  - GET is used when you don't want any side effects and are ready to expose some insensitive data, and POST for vice-versa.
+
+### Static servers in python
+
+```bash
+python3 -m http.server 8000
+```
+
+- `-m` refers to the module/library as opposed to the traditional single file execution, here, `http.server` module
+- `8000` refers to the port number where the static server is spun up
+- This small basic server is able to comprehend files types and render each file accordingly
+
+### Building a Dynamic Server
+
+- **Code, Explained**: Refer to `Level-03/dynamic-server/server.py`
+- **Status code**:
+  1. Informational responses (`100` - `199`)
+  2. Successful responses (`200` – `299`)
+  3. Redirection messages (`300` – `399`)
+  4. Client error responses (`400` – `499`)
+  5. Server error responses (`500` – `599`)
+
+### Dynamic Routing
+
+- **Code, Explained**: Refer to `Level-03/dynamic-server/server.py`
+
+```python
+  # print the current path
+  # as it an attribute of the SimpleHTTPRequestHandler Class
+  print(self.path)
+```
