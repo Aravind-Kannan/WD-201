@@ -188,3 +188,9 @@ Temporary Items
 
 # Local files to be ignored
 students/
+
+# Temporaily generated files
+GDC-Level-2-Milestone/completed.txt
+GDC-Level-2-Milestone/tasks.txt
+GDC-Level-3-Milestone/completed.txt
+GDC-Level-3-Milestone/tasks.txt
