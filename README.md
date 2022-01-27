@@ -558,3 +558,74 @@ python3 -m http.server 8000
   # as it an attribute of the SimpleHTTPRequestHandler Class
   print(self.path)
 ```
+
+# Level 4: Supercharging Python HTTP with Django
+
+## Installing Django
+
+### Intro to PIP
+
+- `pip` will allow us to install external libraries with ease. Python packages are usually hosted at **PyPI**. PyPI is free and anyone can upload their own package into it. Packages from PyPI can be installed using pip.
+- Python packages are versioned. Versioning allows us to keep track of the changes in the code, this becomes very useful when we are working with large libraries that are updated frequently. We can force pip to install a specific version of the library so that even if newer versions of the library are released, we can still use the old version which works with our project.
+- The libraries we use can also have their own dependencies, pip finds out exactly who needs what and installs them correctly.
+- ```bash
+  pip freeze
+  ```
+  This command lists all the packages that are installed on your system, note that each package is listed with its current version as well. The packages are listed in the following format: `package_name==version` (`==` is the separator for the version number).
+- To install a python package, you can use the following command:
+  ```bash
+  pip install package_name==version
+  pip install package_name>=version # installs a version greater than or equal to the specified version
+  ```
+
+### Virtual Environments in Python
+
+- `Virtualenvs` create an isolated environment where you can install packages and experiment freely without affecting the rest of your machine. You can create as many virtualenvs as you want. Another advantage of virtualenvs is that they don't require permissions to install packages, installing global packages usually required you to have root access.
+- Virtualenv itself is a package that is installed with pip, This command installs the virtualenv package.
+- ```bash
+  virtualenv .env # This command will create a new virtual environment under the .env folder, usually where the environment resides
+  source .env/bin/activate # To activate your virtual environment
+  which python # To confirm the virtual environment is active
+  deactivate # To deactivate the virtual environment
+  ```
+
+### Why web frameworks
+
+- Frameworks are simply a bunch of code that solves a lot of problems you might face when developing web applications, it allows you to focus on the **core of your application** and not worry about the low level implementations.
+- Frameworks also **bring structure** to your projects, structure helps in reading your code and making it easier to understand.
+- Frameworks also help keep our **application safe**, web attacks change every day and keeping track of them and patching them is a very tedious task, web frameworks like django keep track of each vulnerability and issues a fix as soon as its discovered, which makes the developers life easier.
+
+> Django - "The web framework for perfectionists with deadlines!"
+
+### Baby steps in Django
+
+Create a virtual environment and `pip install django`. Format the interpreter in VS code to point to the binary in the environment. Run `python manage.py runserver` to test, if the server is working.
+
+To understand file structure, read [docs](https://docs.djangoproject.com/en/4.0/intro/tutorial01/#creating-a-project)
+
+```
+mysite/
+    manage.py
+    mysite/
+        __init__.py
+        settings.py
+        urls.py
+        asgi.py
+        wsgi.py
+```
+
+## Basics of Django
+
+### Views in Django
+
+- A view function, or [view](https://docs.djangoproject.com/en/4.0/topics/http/views/) for short, is a Python function that takes a web request and returns a web response.
+
+- [URL Dispatcher](https://docs.djangoproject.com/en/4.0/topics/http/urls/): A clean, elegant URL scheme is an important detail in a high-quality web application. Django lets you design URLs however you want, with no framework limitations.
+
+### Django templates
+
+- [Templates](https://docs.djangoproject.com/en/4.0/topics/templates/): Being a web framework, Django needs a convenient way to generate HTML dynamically. The most common approach relies on templates. A template contains the static parts of the desired HTML output as well as some special syntax describing how dynamic content will be inserted.
+
+### Interactive web pages with Django
+
+- **Code, Explained**: Refer to `Level-04/task_manager/task_manager/urls.py`
