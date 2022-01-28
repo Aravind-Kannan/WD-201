@@ -188,6 +188,7 @@ Temporary Items
 
 # Local files to be ignored
 students/
+TODO.md
 
 # Temporaily generated files
 GDC-Level-2-Milestone/completed.txt
