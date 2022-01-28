@@ -629,3 +629,101 @@ mysite/
 ### Interactive web pages with Django
 
 - **Code, Explained**: Refer to `Level-04/task_manager/task_manager/urls.py`
+
+# Level 5: Database Magic
+
+## Basics of Databases and Django Models
+
+### Introduction to Databases
+
+- Issues with global variable (volatile, different versions of data on different servers) and text files (inefficient, rewriting large data to update one line per se)
+
+- You can visualize relational tables as a bunch of columns and rows where columns are called `attributes or fields` and rows are called `records`.
+
+- For example, we can have a table called users with the following columns or attributes: name, email, age then the rows would be the actual data that is stored in the table. Like, `("John", "john@gmail.com", 24)`, `("Doe", "doe@gmail.com", 18)` and so on.
+
+- Databases also allow us to perform queries on the data, for example, we can ask the database to give us all the users that are older than 18, or all the users that are younger than 18 or any condition you can think of, you can also delete rows, join tables and so on.
+
+- Databases use `SQL` (Structured Query Language) which is a standardized programming language that's used to interact with the database, raw SQL will not be covered in this course, instead, we will focus on `Django ORM`(Object Relational Mapping) which is a library that allows us to interact with databases using Python.
+
+### Apps in Django
+
+- **DEFINITION**: Django loves modularising things, as in converting everything into smaller modules that can be reused, these modules can be published as packages that can be used in different projects. Django calls these small modules `apps`.
+
+> Apps should “Do one thing and do it well.” - Unix Philosophies
+
+- To create an app you can run the command `python manage.py startapp <app_name>`, the app name should always be in lower cases.
+
+- The app we created is not yet linked to the Django project, to link it to the project we need to add the name of our new app to the end of the `INSTALLED_APPS` list in the `settings.py` file.
+
+### Models in depth
+
+- When we created the new app, Django created a bunch of files and a folder for us, among these files, all Database/Schema related code resides in `models.py`
+
+- The predefined table structure is often called a `schema`, it is more or less the blueprint of how the database/table is constructed.
+
+- Django allows us to model schemas by creating classes, in Django, a model is any class that inherits from the `django.db.models.Model` class, if you create a class from this base class then Django maps it into a database table automatically, it then allows us to perform all kinds of operations by calling methods on this class.
+
+- **ORM is an Abstraction Layer**: It is important to note that Django does not store the data, Django just converts what you want to store/query into a SQL query understandable by the database. The actual storing/querying is done by the database, Django provides this layer of abstraction so that we can create better applications without spending time with the specifics.
+
+### Applying Schemas with Migrations
+
+- In all projects, Database Schemas are sacred, even simple changes in them can break the whole application. Because of that, Django does not automatically sync the schema with the database, we have to manually ask Django to keep the schema up to date.
+
+- **[Migrations](https://docs.djangoproject.com/en/4.0/topics/migrations/):** are a way to record changes in the database schema. you can think of it as git for database schema changes. It keeps track of the history, it allows us to move to a specific version of the schema as well.
+
+- Guide to **[writing migrations](https://docs.djangoproject.com/en/4.0/howto/writing-migrations/)**
+
+- Commands:
+
+  - `makemigrations`: This is responsible for creating new migrations based on the changes you have made to your models.
+  - `migrate`: This is when Django actually performs the schema changes in the Database. This command can also be used to move to a specific migration version.
+
+- Idea: **Schema <-> Migrations <-> Database**
+
+- Migrations are **atomic** in nature, ie if one change fails to be performed, all the migrations are rolled back. the database is moved to the state it was in before the migration was applied.
+
+## Hands on with the Django ORM
+
+- Every model has a model manager
+
+### Introduction to the ORM
+
+- Understanding QuerySet: A `QuerySet` is, in essence, a list of objects of a given Model. QuerySets allow you to read the data from the database, filter it and order it.
+
+- Read crisp article from [DjangoGirls](https://tutorial.djangogirls.org/en/django_orm/) on ORM
+
+### Soft Deletions
+
+Generally in realtime-applications, we don't perform hard deletions so as to remove the record from the database rather we mark an attribute to denote whether the record is deleted or not.
+
+### Table Relationships
+
+- The dictionary definition of a `relational database` is a database structured to recognize relations between stored items of information.
+- Relational Database
+- Primary and Foreign Key
+- Joins
+- Problems of large database with duplicate data and importance of database design
+- [Normalization](https://docs.microsoft.com/en-us/office/troubleshoot/access/database-normalization-description)
+  - First Normal Form:
+    - Eliminate repeating groups in individual tables.
+    - Create a separate table for each set of related data.
+    - Identify each set of related data with a primary key.
+  - Second Normal Form:
+    - Create separate tables for sets of values that apply to multiple records.
+    - Relate these tables with a foreign key.
+  - Third Normal Form:
+    - Eliminate fields that do not depend on the key.
+
+### Django Admin Interface
+
+- `tasks/admin.py` => We must register model before accessing in `admin/`
+
+  ```python
+  from tasks.models import Task
+
+  admin.sites.site.register(Task)
+  ```
+
+- Creating superuser: `python manage.py createsuperuser`, we can use this credentials to login to the `/admin` console
+- Now that we've registered model in admin, we're able to add, delete, modify and play around the records
