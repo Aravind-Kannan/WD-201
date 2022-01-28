@@ -727,3 +727,61 @@ Generally in realtime-applications, we don't perform hard deletions so as to rem
 
 - Creating superuser: `python manage.py createsuperuser`, we can use this credentials to login to the `/admin` console
 - Now that we've registered model in admin, we're able to add, delete, modify and play around the records
+
+# Level 6:
+
+> 🤪 Django was named after the jazz guitarist Jean Reinhardt, Django was his nickname.
+
+## History of Django
+
+- Django started as a side project of an intern who was fed up with maintaining bulky PHP code at a newspaper company called Lawrence, it was created back in 2005 when there were little to no web applications written in python.
+- Django was built to build applications quickly, one of its core philosophies is **"Don't Repeat Yourself"** often abbreviated as `DRY`.
+
+- ⚜️ [Design Philosophies](https://docs.djangoproject.com/en/3.2/misc/design-philosophies/) listed on Django's Official
+
+## Mastering Django
+
+### Class based Views
+
+- Function-based view to Class-based view
+- [Class based view](https://docs.djangoproject.com/en/4.0/topics/class-based-views/)
+  - A view is a callable which takes a request and returns a response.
+  - This can be more than just a function, and Django provides an example of some classes which can be used as views. These allow you to structure your views and reuse code by harnessing inheritance and mixins.
+  - There are also some generic views for tasks which we’ll get to later, but you may want to design your own structure of reusable views which suits your use case.
+- [Generic List View](https://docs.djangoproject.com/en/4.0/ref/class-based-views/generic-display/#listview)
+- [Pagination](https://docs.djangoproject.com/en/4.0/topics/pagination/)
+
+### CSRF Token
+
+- To prevent against [CSRF](https://docs.djangoproject.com/en/4.0/ref/csrf/) Attack:
+  - Make sure those routes having side effects use safe methods like `POST`
+  - And include the `CSRF` token
+- Idea is that the server generates that token and keeps a record of it, so if the server receives a form with a csrf token that it has no record of, it will flag the request
+- This should not be done for POST forms that target external URLs, since that would cause the CSRF token to be leaked, leading to a vulnerability.
+
+### Create Views and Forms
+
+- [Django Create Views](https://docs.djangoproject.com/en/4.0/ref/class-based-views/generic-editing/#createview)
+- [Django Update Views](https://docs.djangoproject.com/en/4.0/ref/class-based-views/generic-editing/#updateview)
+
+### Detail and Delete Views
+
+- [Django Detail Views](https://docs.djangoproject.com/en/4.0/ref/class-based-views/generic-display/#detailview)
+- [Django Delete Views](https://docs.djangoproject.com/en/4.0/ref/class-based-views/generic-editing/#deleteview)
+
+- Forms always deal with `POST` HTTP method, even for deletion; Only in API we use the `DELETE` HTTP method
+
+### Sessions and Authentication
+
+- All communication between the server and client is done with HTTP, which is a **stateless** protocol.
+- `stateless` means that every request is an independent transaction, each one does not affect the other, HTTP does not know what request came before it or how many times it was called, it has no state.
+- To keep track of the sessions, Django uses `cookies`
+- An `HTTP cookie` (web cookie, browser cookie) is a small piece of data that a server sends to a user's web browser. The browser may store the cookie and send it back to the same server with later requests.
+- When you visit a page that Django renders, Django will create a new random key and send it over to your browser as a cookie, every time you visit any route in the same server (base URL), the cookie is sent along with the request, when Django sees the cookie it knows that it's you sending the request and sets the context accordingly.
+- You can also store values in sessions, maybe a login time and a session timeout, maybe a language preference, anything like that. These values are stored in the session table and can be accessed in the view.
+- **Sessions are used to store small amount of data, for everything else we use database**
+
+### Creating a multi user application
+
+- Associate User with Task
+- Detail, Delete and Update Views should have been authenticated to access and only be able to views the respective user's details
