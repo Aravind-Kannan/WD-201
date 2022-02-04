@@ -785,3 +785,149 @@ Generally in realtime-applications, we don't perform hard deletions so as to rem
 
 - Associate User with Task
 - Detail, Delete and Update Views should have been authenticated to access and only be able to views the respective user's details
+
+# Level 7:
+
+## REST API's with Django
+
+### What is REST?
+
+**REST** stands for `Representational State Transfer`. It is a standard or a design pattern that is used when developing web application APIs. API's that follow the REST standard are often called RESTful web applications or RESTful APIs. We can perform a variety of operations on the tasks, the major ones being `CREATE`, `RETRIEVE`, `UPDATE`, `DELETE` (CRUD Operations). REST forms guidelines on how these operations are performed, for example, HTTP has a method called GET The `GET` method must always be used to retrieve or READ data as per the REST guidelines, similarly `POST` must be used to perform CREATE operations, `PATCH` and `PUT` for update operations and finally `DELETE` for delete operations. So instead of having routes like `create-tasks`, `delete-tasks` and so on .. we will have one route for tasks `/task` and then all operations are done with different HTTP methods, this makes the API much easier to understand to us and the folks using our API.
+
+### APIs with Plain Django
+
+Serializing and deserializing like so, can get painful after a point, so make use of the `Django REST framework`
+
+```python
+  from django.views import View
+  from django.http.response import JsonResponse
+  from tasks.models import Task
+
+  class TaskList(View):
+    def get(self, request):
+      tasks = Task.objects.filter(deleted=False)
+      data = []
+      for task in tasks:
+          data.append({"title": task.title})
+      return JsonResponse({"tasks": data})
+```
+
+## Creating APIs with Django Rest Framework
+
+### Getting started with DRF
+
+- Install: `Django REST framework`
+
+  ```bash
+  pip install djangorestframework
+  ```
+
+- Install: `Django filters`
+  ```bash
+  pip install django-filter
+  ```
+- After installing, append to the `INSTALLED_APPS` list in the `settings.py` file:
+
+  - `"rest_framework"`
+  - `"django_filters"`
+
+- To start using the DRF, just include:
+
+  ```python
+  from rest_framework.views import APIView
+  from rest_framework.response import Response
+  from tasks.models import Task
+
+  class TaskList(APIView):
+    def get(self, request):
+      tasks = Task.objects.filter(deleted=False)
+      data = []
+      for task in tasks:
+          data.append({"title": task.title})
+      return Response({"tasks": data})
+  ```
+
+  You will observe that entire UI has been changed
+
+- Let's use the DRF's built in serializer to make things more smooth:
+
+  ```python
+  from rest_framework.views import APIView
+  from rest_framework.response import Response
+  from rest_framework.serializers import ModelSerializer
+  from tasks.models import Task
+
+  class TaskSerializer(ModelSerializer):
+    class Meta:
+      model = Task
+      fields = ["title", "description", "completed"]
+
+  class TaskList(APIView):
+    def get(self, request):
+      tasks = Task.objects.filter(deleted=False)
+      data = TaskSerializer(tasks, many=True).data
+      return Response({"tasks": data})
+  ```
+
+### Generic views in DRF
+
+- DRF generates Dynamic Routers
+
+  ```python
+  # task_manager/urls.py
+
+  from rest_framework.routers import SimpleRouter
+
+  router = SimpleRouter()
+
+  # routers.register("api/task", TaskViewSet )
+
+  urlpatterns = [
+    #Already filled in views
+    # path("admin/", admin.site.urls),
+    # path("all-tasks/", GenericAllTaskView.as_view()),
+  ] + router.urls
+
+  ```
+
+- Side Note: For the course, we stick to DRF router for API and Django for other views
+- To build generic view set:
+
+  ```python
+  from rest_framework.viewsets import ModelViewSet
+  from rest_framework.views import APIView
+  from rest_framework.response import Response
+  from rest_framework.serializers import ModelSerializer
+  from tasks.models import Task
+
+  class TaskSerializer(ModelSerializer):
+    class Meta:
+      model = Task
+      fields = ["title", "description", "completed"]
+
+  class TaskList(APIView):
+    def get(self, request):
+      tasks = Task.objects.filter(deleted=False)
+      data = TaskSerializer(tasks, many=True).data
+      return Response({"tasks": data})
+
+  class TaskViewSet(ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+  ```
+
+### How Generic Views work in DRF
+
+- We go for Generic `ModelSerializer`, because it is similar to repeating the model's fields everywhere. So, the DRF takes care of the redundant work in populating the fields and methods of the ModelSerializzer
+- `ModelViewSet` consists of CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin and GenericViewSet. The `GenericViewSet` maps the HTTP Method to the methods in each of the Mixin
+
+### Adding Authorization
+
+- In order to add permission to allow only respective user to view his or her own task, we include `permssion_classes = (IsAuthenticated,)`
+- Override `perform_create` to link the tasks with the user
+- Override `get_queryset` to list only the tasks that aren't soft deleted and only belong to the current authenticated
+- Understanding **Nested Serializers**
+
+### Filters with Django Filters
+
+- Understanding [filters](https://www.pupilfirst.school/targets/17448)
