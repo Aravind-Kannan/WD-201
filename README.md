@@ -931,3 +931,106 @@ Serializing and deserializing like so, can get painful after a point, so make us
 ### Filters with Django Filters
 
 - Understanding [filters](https://www.pupilfirst.school/targets/17448)
+
+# Level 8:
+
+## Django in Detail
+
+### Request Response Cycle
+
+- [Read](https://www.pupilfirst.school/targets/17838) to understand the entire workflow:
+  **Request -> Request Middleware -> URL Router -> Views -> Response Middleware -> Response**
+  Middlewares make it incredibly simple to "plugin" new handlers into an existing request-response cycle.
+
+- If we were to create a `CustomMiddleware`, we can do so:
+
+  ```python
+  class CustomMiddleware(object):
+    def __init__(self, get_response):
+        """
+        One-time configuration and initialisation.
+        """
+        self.get_response = get_response
+
+    def __call__(self, request):
+        """
+        Code to be executed for each request before the view (and later
+        middleware) are called.
+        """
+        print("From middleware: ", request)
+        response = self.get_response(request)
+        return response
+
+  ```
+
+  In this any LOC in `__call__` function before `response = self.get_response(request)` is processed before request reaching the view, and any LOC after it is processed while returning back from the view
+
+### Template blocks in Django
+
+- One of the powerful features
+- Template inheritance allows you to create a template skeleton that can be reused in other templates.
+- At the start of the file for any child template, you must define which parent template you are extending from. We use the `extends` tag for extending a parent template, and you can extend any template in Django. Once we specify the parent template, we can create the blocks we want to override/modify in the child template.
+- When rendering the page, Django will load up the parent template and replace the blocks with the child template. This means that anything that is not specified inside a block is ignored completely. This makes it really easy to structure web documents and makes it easier to reuse HTML code.
+
+### Static file management
+
+- Static files are files that are not changed when the application is running. These include the CSS files, images, Javascript files, and any other types of files that are not dependent on the application logic.
+- To use this feature: follow [tutorial](https://www.pupilfirst.school/targets/18195)
+
+## Databases in Detail
+
+### Database Design Fundamentals
+
+- ER Diagrams are usually used to visualize a database design, ER Diagram stands for `Entity Relationship Diagram`.
+- Understanding relationships:
+  - One-to-one
+  - Many-to-one
+  - Many-to-many
+
+### ORM Fundamentals
+
+Django shell is simply the Python interactive interpreter with Django configured. Since Django is configured, you can interact with the Django ORM without any additional setup.
+
+```bash
+  python manage.py shell
+```
+
+## Background Processing with celery
+
+### Getting Started with Celery
+
+- Let's say that you want to send an email with all the pending tasks to the user at midnight every day. This is a job that is dependent on the current time and not based on an external request. These types of jobs are usually called **scheduled tasks** or **scheduled jobs**.
+- There can also be externally triggered jobs as well, for example, let's say you have an endpoint that does a lot of computation and needs a lot of time to process. These types of long-running jobs are usually performed in the **background** so that the actual server has more time to work on simpler requests.
+- `Celery` is a popular library that solves exactly this problem. Note that Celery is not dependent on Django. There are packages that integrate Django and Celery for specific use cases.
+
+- Celery Terms:
+
+  - **Task**: A Celery task is a representation of a **callable** that can be invoked by Celery. In other words, it is a method that is registered with Celery. An instance of the task contains the **arguments you passed to the method** as well. When you start a background job, all you are doing is creating a new task object and storing it somewhere to be executed.
+
+  - **Broker**:
+
+    - Since Celery is used in background processing there needs to be some sort of queueing mechanism, any task that needs to be processed are added to the queue and then processed one by one. This **queue** is usually called a broker. The broker does not have any knowledge of the actual implementation of the task. It just stores the task in the queue.
+
+    - For our implementation we will be using **Redis** as the broker, Redis is an in-memory data store, Redis has implementations of different kinds of abstracted data structures built-in, one of them is the queue which makes it ideal as the broker. The use of Redis is not limited to Celery.
+
+  - **Worker**: A Celery worker is responsible for actually **executing** the task, a worker asks the broker to get pending tasks and executes them as soon as they are available. You can have as many celery workers as you want in a project.
+
+  - **Periodic Scheduler(Beat)**: Periodic Tasks in Celery are made possible with Celery beat, which is a scheduler that schedules tasks to be executed based on the schedules we configure.
+
+- Install redis, use it as a service and check if it works:
+  ```bash
+  # Install redis
+  brew install redis
+  # Start redis service
+  brew services start redis
+  # Stop redis service
+  brew services stop redis
+  # Ping CLI, expects PONG
+  redis-cli ping
+  ```
+- Install redis and celery:
+  ```bash
+    pip install celery==4.4.7 redis
+  ```
+
+> Note that Celery does NOT automatically restart when code changes are made, Celery processes have to be manually restarted for any changes to take effect.
